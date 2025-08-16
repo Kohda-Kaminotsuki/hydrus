@@ -397,26 +397,35 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 if tagset.startswith(f"{current_tag} {{unless}} "):
                     testing_tagsets.append(tagset.split( ' {unless} ' ))
 
-            if len( testing_tagsets ) == 0 or passthrough_tags is None:
+            if len( testing_tagsets ) == 0:
                 
                 if tag in self._tags_blacklist:
                     
                     return False 
+                
+            if passthrough_tags is None: 
+                
+                return False
 
-            if len( testing_tagsets ) != 0 and passthrough_tags is not None:
-                if current_tag in self._tags_blacklist: raise Exception(f"current_tag: {current_tag}, passthrough_tags: {passthrough_tags} testing tagsets: {testing_tagsets}")
-                for testing_tagset in testing_tagsets:
-                    if current_tag in self._tags_blacklist: raise Exception(f"current_tag: {current_tag}, passthrough_tags: {passthrough_tags} testing tagsets: {testing_tagsets} testing tagset: {testing_tagset}")
-                    for testing_tag in testing_tagset:
-                        if current_tag in self._tags_blacklist: raise Exception(f"current_tag: {current_tag}, passthrough_tags: {passthrough_tags} testing tagsets: {testing_tagsets} testing tagset: {testing_tagset} testing tag: {testing_tag}")
-                        if testing_tag == current_tag:
-                            if current_tag in self._tags_blacklist: raise Exception(f"current_tag: {current_tag}, passthrough_tags: {passthrough_tags} testing tagsets: {testing_tagsets} testing tagset: {testing_tagset} testing tag: {testing_tag} current_tag {current_tag}")
+            if len( testing_tagsets ) != 0 and passthrough_tags is not None: #it is in here now
+                
+                for testing_tagset in testing_tagsets: # list of lists to list
+                    
+                    for testing_tag in testing_tagset: # item by item of list
+                        
+                        if testing_tag == current_tag: # every list starts with current tag which was already caught in passthrough tags thus would give false True if not skipped 
+                            
                             continue
                         
-                        if testing_tag in passthrough_tags:
-                            raise Exception(f"testing_tagset: {testing_tagset}, testing_tag: {testing_tag}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
+                        if testing_tag in passthrough_tags: # if ANY passthrough tag is the unless exception it should return True
+                            print(f"exception found, {testing_tag}")
                             return True
-                return False
+                    print("tagset complete without exception")
+                    # Tagset looped through, if it reaches this point one of the tagsets has NO tags in common with passthrough to allow true
+                
+                # All tagsets looped through, if it reaches this point NONE of the tagsets have True exceptions
+                print("tagsets all complete without exception")
+                return False # None of the tagsets excused the tag
             if tag in self._tags_blacklist:
                     
                 return False
