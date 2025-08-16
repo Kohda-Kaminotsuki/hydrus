@@ -395,7 +395,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             testing_tagsets = []
             for tagset in self._tags_blacklist:
                 if tagset.startswith(f"{current_tag} {{unless}} "):
-                    testing_tagsets.append(tagset.split( ' {unless} ' ))
+                    testing_tagsets.append( re.split(r' \{unless\} | \{or\} ', tagset) )
 
             if len( testing_tagsets ) == 0:
                 
@@ -407,28 +407,24 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
 
                 return False
 
-            if len( testing_tagsets ) != 0 and passthrough_tags is not None: #it is in here now 100%
+            if len( testing_tagsets ) != 0 and passthrough_tags is not None: 
                 
-                for testing_tagset in testing_tagsets: # list of lists to list
+                for testing_tagset in testing_tagsets: 
                     
-                    for testing_tag in testing_tagset: # item by item of list
+                    for testing_tag in testing_tagset: 
                         
-                        if testing_tag == current_tag: # every list starts with current tag which was already caught in passthrough tags thus would give false True if not skipped 
+                        if testing_tag == current_tag: 
                             
                             continue
-                        passthrough_test_list = []
-                        for passthrough_tag in passthrough_tags: #TODO get siblings
-                            passthrough_test_list.append( passthrough_tag )
-                            if testing_tag == passthrough_tag:
-                                return True
+
+                        for passthrough_tag in passthrough_tags:
                             
-                        
-                        if testing_tag in list(passthrough_tags): # if ANY passthrough tag is the unless exception it should return True
-                            return True
-                    # Tagset looped through, if it reaches this point one of the tagsets has NO tags in common with passthrough to allow true
-                
-                # All tagsets looped through, if it reaches this point NONE of the tagsets have True exceptions
-                return False # None of the tagsets excused the tag
+                            if testing_tag == passthrough_tag:
+                                
+                                return True
+
+                return False
+            
             if tag in self._tags_blacklist:
                   
                 return False
