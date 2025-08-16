@@ -401,17 +401,19 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                     return False
             
-            if testing_tagsets[0] in self._tags_blacklist:    
-                for testing_tagset in testing_tagsets: 
+            if testing_tagsets[0] in self._tags_blacklist:
+                unless_or_tags = []
+                for testing_tagset in testing_tagsets:
                         
                     testing_tagset = re.split(r' \{unless\} | \{or\} ', testing_tagset) # KOHDA allows natural language keywording in blacklist
                         
-                    for testing_tag in testing_tagset[1:]:
+                    for testing_tag in testing_tagset:
                             
                         if testing_tag in passthrough_tags:
                                 
-                            return True # Kohda: allowed through the filter because tags match one of the allowed unless/or tags
-                return False
+                            unless_or_tags.append(testing_tag)
+                            
+                return True if len( unless_or_tags ) > 1 else False
                         
             
                 
