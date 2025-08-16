@@ -416,15 +416,11 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                         if testing_tag == current_tag: # every list starts with current tag which was already caught in passthrough tags thus would give false True if not skipped 
                             
                             continue
-                        raise Exception(f"passthrough_tags: {list(passthrough_tags)}")
-                        if testing_tag in passthrough_tags: # if ANY passthrough tag is the unless exception it should return True
-                            print(f"exception found, {testing_tag}")
+                        if testing_tag in list(passthrough_tags): # if ANY passthrough tag is the unless exception it should return True
                             return True
-                    print("tagset complete without exception")
                     # Tagset looped through, if it reaches this point one of the tagsets has NO tags in common with passthrough to allow true
                 
                 # All tagsets looped through, if it reaches this point NONE of the tagsets have True exceptions
-                raise Exception("tagsets all complete without exception")
                 return False # None of the tagsets excused the tag
             if tag in self._tags_blacklist:
                   
