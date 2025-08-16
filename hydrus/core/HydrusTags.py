@@ -408,7 +408,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 for testing_tagset in testing_tagsets:
                     
                     for testing_tag in testing_tagset:
-                        
+                        raise Exception(f"testing_tagset: {testing_tagset}, testing_tag: {testing_tag}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
                         if testing_tag == current_tag:
                             
                             continue
