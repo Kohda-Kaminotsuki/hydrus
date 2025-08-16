@@ -1178,7 +1178,7 @@ class EditTagFilterPanel( ClientGUIScrolledPanels.EditPanel ):
                     
                     for test_tag_and_siblings in tags_to_siblings.values():
                         
-                        results.append( False not in ( tag_filter.TagOK( t, apply_unnamespaced_rules_to_namespaced_tags = True ) for t in test_tag_and_siblings ) )
+                        results.append( False not in ( tag_filter.TagOK( t, apply_unnamespaced_rules_to_namespaced_tags = True, passthrough_tags=tags_to_siblings.values() ) for t in test_tag_and_siblings ) )
                         
                     
                     return results

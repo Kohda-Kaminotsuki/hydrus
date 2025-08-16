@@ -735,11 +735,11 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             
         
     
-    def TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False ):
+    def TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False, passthrough_tags = None ):
         
         with self._lock:
             
-            return self._TagOK( tag, apply_unnamespaced_rules_to_namespaced_tags = apply_unnamespaced_rules_to_namespaced_tags )
+            return self._TagOK( tag, apply_unnamespaced_rules_to_namespaced_tags = apply_unnamespaced_rules_to_namespaced_tags, passthrough_tags = passthrough_tags )
             
         
     
