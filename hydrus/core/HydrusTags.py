@@ -390,7 +390,6 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 
                 return True
 
-
             current_tag = tag
             
             testing_tagsets = [ tagset for tagset in self._tags_blacklist if tagset.startswith( f"{current_tag} {{unless}} " ) ]
@@ -400,7 +399,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 if tag in self._tags_blacklist:
                     
                     return False
-            if len( testing_tagsets ) != 0 and passthrough_tags is not None:
+            if len( testing_tagsets ) != 0:
                 if testing_tagsets[0] in self._tags_blacklist:
                     unless_or_tags = []
                     for testing_tagset in testing_tagsets:
