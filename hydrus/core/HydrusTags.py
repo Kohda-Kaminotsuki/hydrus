@@ -400,21 +400,21 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 if tag in self._tags_blacklist:
                     
                     return False
-            
-            if testing_tagsets[0] in self._tags_blacklist:
-                unless_or_tags = []
-                for testing_tagset in testing_tagsets:
-                        
-                    testing_tagset = re.split(r' \{unless\} | \{or\} ', testing_tagset) # KOHDA allows natural language keywording in blacklist
-                        
-                    for testing_tag in testing_tagset:
+            if len( testing_tagsets ) != 0:
+                if testing_tagsets[0] in self._tags_blacklist:
+                    unless_or_tags = []
+                    for testing_tagset in testing_tagsets:
                             
-                        if testing_tag in passthrough_tags:
+                        testing_tagset = re.split(r' \{unless\} | \{or\} ', testing_tagset) # KOHDA allows natural language keywording in blacklist
+                            
+                        for testing_tag in testing_tagset:
                                 
-                            unless_or_tags.append(testing_tag)
+                            if testing_tag in passthrough_tags:
+                                    
+                                unless_or_tags.append(testing_tag)
+                                
+                    return True if len( unless_or_tags ) > 1 else False
                             
-                return True if len( unless_or_tags ) > 1 else False
-                        
             
                 
                 
