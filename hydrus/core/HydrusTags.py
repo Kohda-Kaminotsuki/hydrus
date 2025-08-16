@@ -389,27 +389,31 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             if tag in self._tags_whitelist:
                 
                 return True
-                
+
+
+            current_tag = tag
             
-            if tag in self._tags_blacklist:
+            testing_tagsets = [ tagset for tagset in self._tags_blacklist if tagset.startswith( f"{current_tag} {{unless}} " ) ]
+            
+            if len( testing_tagsets ) == 0 or passthrough_tags is None:
                 
-                testing_tagsets = [tagset for tagset in self._tags_blacklist if tagset.startswith( tag + ' | ' )]
-
-                if len( testing_tagsets ) == 0 or passthrough_tags is None:
-
-                    return False #KOHDA: returns false because there are no unless tags to check while tag IS blacklisted normally
-                
+                if tag in self._tags_blacklist:
+                    
+                    return False
+            
+            if testing_tagset[0] in self._tags_blacklist:    
                 for testing_tagset in testing_tagsets: 
-                    
+                        
                     testing_tagset = re.split(r' \{unless\} | \{or\} ', testing_tagset) # KOHDA allows natural language keywording in blacklist
-                    
+                        
                     for testing_tag in range(1, len(testing_tagset)):
-                        
-                        if testing_tagset[testing_tag] in passthrough_tags:
                             
+                        if testing_tagset[testing_tag] in passthrough_tags:
+                                
                             return True # Kohda: allowed through the filter because tags match one of the allowed unless/or tags
+                return False
                         
-                return False #KOHDA: returns false if in a situation where none of passthrough tags match
+            
                 
                 
             if apply_unnamespaced_rules_to_namespaced_tags:
