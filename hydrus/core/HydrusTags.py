@@ -400,7 +400,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 if tag in self._tags_blacklist:
                     
                     return False
-            if len( testing_tagsets ) != 0:
+            if len( testing_tagsets ) != 0 and passthrough_tags is not None:
                 if testing_tagsets[0] in self._tags_blacklist:
                     unless_or_tags = []
                     for testing_tagset in testing_tagsets:
