@@ -394,7 +394,9 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             
             testing_tagsets = []
             for tagset in self._tags_blacklist:
+                
                 if tagset.startswith(f"{current_tag} {{unless}} "):
+                    
                     testing_tagsets.append( re.split(r' \{unless\} | \{or\} ', tagset) )
 
             if len( testing_tagsets ) == 0:

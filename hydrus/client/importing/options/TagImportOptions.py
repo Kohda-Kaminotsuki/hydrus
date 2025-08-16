@@ -449,8 +449,7 @@ class TagImportOptions( HydrusSerialisable.SerialisableBase ):
         
         tags = set( tags )
         
-        sibling_tags = set( sibling_tags ) #Kohda: these join to make a list of items to check against the blacklist
-        #kohda: my task will be to rework how this pulls info from the blacklist ?
+        sibling_tags = set( sibling_tags )
 
         passthrough_tags = set( tags ).union( sibling_tags )
 
