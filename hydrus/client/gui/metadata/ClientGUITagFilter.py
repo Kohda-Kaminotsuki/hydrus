@@ -1175,12 +1175,13 @@ class EditTagFilterPanel( ClientGUIScrolledPanels.EditPanel ):
                     results = []
                     
                     tags_to_siblings = CG.client_controller.Read( 'tag_siblings_lookup', CC.COMBINED_TAG_SERVICE_KEY, test_tags )
-                    
+
+                    passthrough_tags = tags_to_siblings.values()
+
                     for test_tag_and_siblings in tags_to_siblings.values():
-                        
-                        results.append( False not in ( tag_filter.TagOK( t, apply_unnamespaced_rules_to_namespaced_tags = True, passthrough_tags=tags_to_siblings.values() ) for t in test_tag_and_siblings ) )
-                        
-                    
+
+                        results.append( False not in ( tag_filter.TagOK( t, apply_unnamespaced_rules_to_namespaced_tags = True, passthrough_tags=passthrough_tags ) for t in test_tag_and_siblings ) )
+
                     return results
                     
                 
