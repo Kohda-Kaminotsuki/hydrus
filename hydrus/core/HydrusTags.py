@@ -400,11 +400,11 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             if len( testing_tagsets ) == 0:
                 
                 if tag in self._tags_blacklist:
-                    
+                    raise Exception( f'escaping too early: {tag}')
                     return False 
                 
             if passthrough_tags is None: 
-                
+                raise Exception( f'passthrough_tags is failing to passthrough')
                 return False
 
             if len( testing_tagsets ) != 0 and passthrough_tags is not None: #it is in here now
@@ -424,13 +424,13 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     # Tagset looped through, if it reaches this point one of the tagsets has NO tags in common with passthrough to allow true
                 
                 # All tagsets looped through, if it reaches this point NONE of the tagsets have True exceptions
-                print("tagsets all complete without exception")
+                raise Exception("tagsets all complete without exception")
                 return False # None of the tagsets excused the tag
             if tag in self._tags_blacklist:
-                    
+                raise Exception( f'testing tagsets not explored')    
                 return False
                             
-            
+            raise Exception("shouldn't even be able to reach this point")
                 
                 
             if apply_unnamespaced_rules_to_namespaced_tags:
