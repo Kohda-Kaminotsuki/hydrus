@@ -394,28 +394,29 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             
             testing_tagsets = []
             for tagset in self._tags_blacklist:
-                testing_tagsets.append(tagset.split( ' {unless} ' ))
+                if tagset.startswith(f"{current_tag} {{unless}} "):
+                    testing_tagsets.append(tagset.split( ' {unless} ' ))
 
             if len( testing_tagsets ) == 0 or passthrough_tags is None:
                 
                 if tag in self._tags_blacklist:
                     
                     return False
-            
-            if len( testing_tagsets ) != 0:
-                if testing_tagsets[0] in self._tags_blacklist:
-                    unless_or_tags = []
-                    for testing_tagset in testing_tagsets:
+
+            if len( passthrough_tags ) != 0:
+                
+                for testing_tagset in testing_tagsets:
+                    
+                    for testing_tag in testing_tagset:
+                        
+                        if testing_tag == current_tag:
                             
-                        testing_tagset = testing_tagset.split(" {unless} ") # KOHDA allows natural language keywording in blacklist
+                            continue
+                        
+                        if testing_tag in passthrough_tags:
                             
-                        for testing_tag in testing_tagset:
-                                
-                            if testing_tag in passthrough_tags:
-                                    
-                                unless_or_tags.append(testing_tag)
-                                
-                    return True if len( unless_or_tags ) > 1 else False
+                            return True
+
                             
             
                 
