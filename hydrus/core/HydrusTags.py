@@ -403,7 +403,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                     return False
 
-            if len( passthrough_tags ) != 0:
+            if len( testing_tagsets ) != 0 and passthrough_tags is not None:
                 
                 for testing_tagset in testing_tagsets:
                     
@@ -416,7 +416,9 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                         if testing_tag in passthrough_tags:
                             raise Exception(f"testing_tagset: {testing_tagset}, testing_tag: {testing_tag}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
                             return True
-
+                if tag in self._tags_blacklist:
+                    
+                    return False
                             
             
                 
