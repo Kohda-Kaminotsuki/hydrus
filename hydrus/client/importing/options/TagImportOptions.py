@@ -449,11 +449,14 @@ class TagImportOptions( HydrusSerialisable.SerialisableBase ):
         
         tags = set( tags )
         
-        sibling_tags = set( sibling_tags )
-        
+        sibling_tags = set( sibling_tags ) #Kohda: these join to make a list of items to check against the blacklist
+        #kohda: my task will be to rework how this pulls info from the blacklist ?
+
+        passthrough_tags = set( tags ).union( sibling_tags )
+
         for test_tags in ( tags, sibling_tags ):
             
-            ok_tags = self._tag_blacklist.Filter( test_tags, apply_unnamespaced_rules_to_namespaced_tags = True )
+            ok_tags = self._tag_blacklist.Filter( test_tags, apply_unnamespaced_rules_to_namespaced_tags = True, passthrough_tags = passthrough_tags )
             
             if len( ok_tags ) < len( test_tags ):
                 

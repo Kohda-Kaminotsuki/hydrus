@@ -1,6 +1,7 @@
 import collections
 import collections.abc
 import threading
+import re
 
 from hydrus.core import HydrusConstants as HC
 from hydrus.core import HydrusExceptions
@@ -378,7 +379,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
         self._UpdateRuleCache()
         
     
-    def _TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False ):
+    def _TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False, passthrough_tags = None ):
         
         # this is called a whole bunch and overhead piles up, so try to splay the logic out to hardcoded tests
         # we handle exceptions by testing tags before namespaces and namespaces before all namespaces
@@ -392,9 +393,25 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             
             if tag in self._tags_blacklist:
                 
-                return False
+                testing_tagsets = [tagset for tagset in self._tags_blacklist if tagset.startswith( tag + ' | ' )]
+
+                if len( testing_tagsets ) == 0 or passthrough_tags is None:
+
+                    return False #KOHDA: returns false because there are no unless tags to check while tag IS blacklisted normally
                 
-            
+                for testing_tagset in testing_tagsets: 
+                    
+                    testing_tagset = re.split(r' \{unless\} | \{or\} ', testing_tagset) # KOHDA allows natural language keywording in blacklist
+                    
+                    for testing_tag in range(1, len(testing_tagset)):
+                        
+                        if testing_tagset[testing_tag] in passthrough_tags:
+                            
+                            return True # Kohda: allowed through the filter because tags match one of the allowed unless/or tags
+                        
+                return False #KOHDA: returns false if in a situation where none of passthrough tags match
+                
+                
             if apply_unnamespaced_rules_to_namespaced_tags:
                 
                 ( namespace, subtag ) = SplitTag( tag )
@@ -598,11 +615,11 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
         self._UpdateRuleCache()
         
     
-    def Filter( self, tags, apply_unnamespaced_rules_to_namespaced_tags = False ):
+    def Filter( self, tags, apply_unnamespaced_rules_to_namespaced_tags = False, passthrough_tags = None ):
         
         with self._lock:
-            
-            return { tag for tag in tags if self._TagOK( tag, apply_unnamespaced_rules_to_namespaced_tags = apply_unnamespaced_rules_to_namespaced_tags ) }
+
+            return { tag for tag in tags if self._TagOK( tag, apply_unnamespaced_rules_to_namespaced_tags = apply_unnamespaced_rules_to_namespaced_tags, passthrough_tags = passthrough_tags ) }
             
         
     
