@@ -379,7 +379,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
         self._UpdateRuleCache()
         
     
-    def _TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False, passthrough_tags = None ): #testing page is passing None
+    def _TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False, passthrough_tags = None ):
         
         # this is called a whole bunch and overhead piles up, so try to splay the logic out to hardcoded tests
         # we handle exceptions by testing tags before namespaces and namespaces before all namespaces

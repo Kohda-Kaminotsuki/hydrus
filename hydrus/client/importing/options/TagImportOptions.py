@@ -851,7 +851,7 @@ class ServiceTagImportOptions( HydrusSerialisable.SerialisableBase ):
             
             if self._get_tags:
                 
-                filtered_tags = self._get_tags_filter.Filter( filterable_tags )
+                filtered_tags = self._get_tags_filter.Filter( filterable_tags, passthrough_tags=filterable_tags )
                 
                 if not self._get_tags_overwrite_deleted:
                     
