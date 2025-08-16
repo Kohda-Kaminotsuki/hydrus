@@ -416,6 +416,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                         if testing_tag in passthrough_tags:
                             raise Exception(f"testing_tagset: {testing_tagset}, testing_tag: {testing_tag}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
                             return True
+                return False
             if tag in self._tags_blacklist:
                     
                 return False
