@@ -394,6 +394,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             
             testing_tagsets = []
             for tagset in self._tags_blacklist:
+                raise Exception(f"tagset: {tagset}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
                 if tagset.startswith(f"{current_tag} {{unless}} "):
                     testing_tagsets.append(tagset.split( ' {unless} ' ))
 
@@ -402,21 +403,23 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 if tag in self._tags_blacklist:
                     
                     return False
-            raise Exception (f" length of testing_tagsets {len(testing_tagsets)}, passthrough_tags: {passthrough_tags}")
+
             if len( testing_tagsets ) != 0 and passthrough_tags is not None:
-                raise Exception(f"testing_tagsets: {testing_tagsets}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
+                
                 for testing_tagset in testing_tagsets:
-                    raise Exception(f"testing_tagset: {testing_tagset}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
+                    
                     for testing_tag in testing_tagset:
-                        raise Exception(f"testing_tagset: {testing_tagset}, testing_tag: {testing_tag}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
+                        
                         if testing_tag == current_tag:
-                            raise Exception(f"testing_tagset: {testing_tagset}, testing_tag: {testing_tag}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
+                            
                             continue
                         
                         if testing_tag in passthrough_tags:
                             raise Exception(f"testing_tagset: {testing_tagset}, testing_tag: {testing_tag}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
                             return True
-                return False
+                if tag in self._tags_blacklist:
+                    
+                    return False
                             
             
                 
