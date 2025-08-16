@@ -394,7 +394,6 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             
             testing_tagsets = []
             for tagset in self._tags_blacklist:
-                raise Exception(f"tagset: {tagset}, current_tag: {current_tag}, passthrough_tags: {passthrough_tags}")
                 if tagset.startswith(f"{current_tag} {{unless}} "):
                     testing_tagsets.append(tagset.split( ' {unless} ' ))
 
@@ -402,16 +401,16 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 
                 if tag in self._tags_blacklist:
                     
-                    return False
+                    return False 
 
             if len( testing_tagsets ) != 0 and passthrough_tags is not None:
-                
+                if current_tag in self._tags_blacklist: raise Exception(f"current_tag: {current_tag}, passthrough_tags: {passthrough_tags} testing tagsets: {testing_tagsets}")
                 for testing_tagset in testing_tagsets:
-                    
+                    if current_tag in self._tags_blacklist: raise Exception(f"current_tag: {current_tag}, passthrough_tags: {passthrough_tags} testing tagsets: {testing_tagsets} testing tagset: {testing_tagset}")
                     for testing_tag in testing_tagset:
-                        
+                        if current_tag in self._tags_blacklist: raise Exception(f"current_tag: {current_tag}, passthrough_tags: {passthrough_tags} testing tagsets: {testing_tagsets} testing tagset: {testing_tagset} testing tag: {testing_tag}")
                         if testing_tag == current_tag:
-                            
+                            if current_tag in self._tags_blacklist: raise Exception(f"current_tag: {current_tag}, passthrough_tags: {passthrough_tags} testing tagsets: {testing_tagsets} testing tagset: {testing_tagset} testing tag: {testing_tag} current_tag {current_tag}")
                             continue
                         
                         if testing_tag in passthrough_tags:
