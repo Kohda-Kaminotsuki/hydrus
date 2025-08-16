@@ -430,7 +430,6 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 raise Exception( f'testing tagsets not explored')    
                 return False
                             
-            raise Exception("shouldn't even be able to reach this point")
                 
                 
             if apply_unnamespaced_rules_to_namespaced_tags:
@@ -445,7 +444,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                         
                     
                     if subtag in self._tags_blacklist:
-                        
+                        raise Exception( f'escaping too early subtag: {subtag}')
                         return False
                         
                     
@@ -464,7 +463,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                 
                 if self._all_unnamespaced_blacklisted:
-                    
+                    raise Exception( f'escaping too early unnamespaced: {tag}')
                     return False
                     
                 
@@ -476,7 +475,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                 
                 if namespace in self._namespaces_blacklist:
-                    
+                    raise Exception( f'escaping too early namespace: {namespace}')
                     return False
                     
                 
@@ -486,7 +485,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                 
                 if self._all_namespaced_blacklisted:
-                    
+                    raise Exception( f'escaping too early namespaced: {namespace}')
                     return False
                     
                 
