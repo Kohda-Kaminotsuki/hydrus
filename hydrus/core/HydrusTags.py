@@ -401,7 +401,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                     return False
             
-            if testing_tagset[0] in self._tags_blacklist:    
+            if testing_tagsets[0] in self._tags_blacklist:    
                 for testing_tagset in testing_tagsets: 
                         
                     testing_tagset = re.split(r' \{unless\} | \{or\} ', testing_tagset) # KOHDA allows natural language keywording in blacklist
