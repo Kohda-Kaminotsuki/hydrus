@@ -417,11 +417,10 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                             
                             continue
                         passthrough_test_list = []
-                        for passthrough_tag in passthrough_tags:
+                        for passthrough_tag in passthrough_tags: #TODO get siblings
                             passthrough_test_list.append( passthrough_tag )
                             if testing_tag == passthrough_tag:
                                 return True
-                        raise Exception(f"Tested Tags: {passthrough_test_list}")
                             
                         
                         if testing_tag in list(passthrough_tags): # if ANY passthrough tag is the unless exception it should return True
