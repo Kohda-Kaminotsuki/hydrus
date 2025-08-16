@@ -400,14 +400,14 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             if len( testing_tagsets ) == 0:
                 
                 if tag in self._tags_blacklist:
-                    raise Exception( f'escaping too early: {tag}')
+
                     return False 
                 
             if passthrough_tags is None: 
-                raise Exception( f'passthrough_tags is failing to passthrough')
+
                 return False
 
-            if len( testing_tagsets ) != 0 and passthrough_tags is not None: #it is in here now
+            if len( testing_tagsets ) != 0 and passthrough_tags is not None: #it is in here now 100%
                 
                 for testing_tagset in testing_tagsets: # list of lists to list
                     
@@ -416,7 +416,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                         if testing_tag == current_tag: # every list starts with current tag which was already caught in passthrough tags thus would give false True if not skipped 
                             
                             continue
-                        
+                        raise Exception(f"passthrough_tags: {passthrough_tags}")
                         if testing_tag in passthrough_tags: # if ANY passthrough tag is the unless exception it should return True
                             print(f"exception found, {testing_tag}")
                             return True
@@ -427,7 +427,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                 raise Exception("tagsets all complete without exception")
                 return False # None of the tagsets excused the tag
             if tag in self._tags_blacklist:
-                raise Exception( f'testing tagsets not explored')    
+                  
                 return False
                             
                 
@@ -444,7 +444,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                         
                     
                     if subtag in self._tags_blacklist:
-                        raise Exception( f'escaping too early subtag: {subtag}')
+
                         return False
                         
                     
@@ -463,7 +463,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                 
                 if self._all_unnamespaced_blacklisted:
-                    raise Exception( f'escaping too early unnamespaced: {tag}')
+                    
                     return False
                     
                 
@@ -475,7 +475,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                 
                 if namespace in self._namespaces_blacklist:
-                    raise Exception( f'escaping too early namespace: {namespace}')
+
                     return False
                     
                 
@@ -485,7 +485,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                 
                 if self._all_namespaced_blacklisted:
-                    raise Exception( f'escaping too early namespaced: {namespace}')
+
                     return False
                     
                 
