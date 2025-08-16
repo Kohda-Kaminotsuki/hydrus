@@ -394,23 +394,21 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             current_tag = tag
             
             testing_tagsets = [ tagset for tagset in self._tags_blacklist if tagset.startswith( f"{current_tag} {{unless}} " ) ]
-            try:
-                if len( testing_tagsets ) == 0 or passthrough_tags is None:
-
-                    if tag in self._tags_blacklist:
-
-                        return False
-            except Exception as e:
-                print(f"Error occurred while checking tag: {e}")
-
+            
+            if len( testing_tagsets ) == 0 or passthrough_tags is None:
+                
+                if tag in self._tags_blacklist:
+                    
+                    return False
+            
             if testing_tagsets[0] in self._tags_blacklist:    
                 for testing_tagset in testing_tagsets: 
                         
                     testing_tagset = re.split(r' \{unless\} | \{or\} ', testing_tagset) # KOHDA allows natural language keywording in blacklist
                         
-                    for testing_tag in range(1, len(testing_tagset)):
+                    for testing_tag in testing_tagset[1:]:
                             
-                        if testing_tagset[testing_tag] in passthrough_tags:
+                        if testing_tag in passthrough_tags:
                                 
                             return True # Kohda: allowed through the filter because tags match one of the allowed unless/or tags
                 return False
