@@ -490,7 +490,7 @@ class TagImportOptions( HydrusSerialisable.SerialisableBase ):
     
     def GetContentUpdatePackage( self, status: int, media_result: ClientMediaResult.MediaResult, filterable_tags: collections.abc.Iterable[ str ], external_filterable_tags = None, external_additional_service_keys_to_tags = None ) -> ClientContentUpdates.ContentUpdatePackage:
         
-        passthrough_tags = external_filterable_tags
+        passthrough_tags = filterable_tags
         
         if external_filterable_tags is None:
             
