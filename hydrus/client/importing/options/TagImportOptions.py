@@ -450,10 +450,12 @@ class TagImportOptions( HydrusSerialisable.SerialisableBase ):
         tags = set( tags )
         
         sibling_tags = set( sibling_tags )
-        
+
+        passthrough_tags = set( tags ).union( sibling_tags )
+
         for test_tags in ( tags, sibling_tags ):
             
-            ok_tags = self._tag_blacklist.Filter( test_tags, apply_unnamespaced_rules_to_namespaced_tags = True )
+            ok_tags = self._tag_blacklist.Filter( test_tags, apply_unnamespaced_rules_to_namespaced_tags = True, passthrough_tags = passthrough_tags )
             
             if len( ok_tags ) < len( test_tags ):
                 
@@ -487,6 +489,8 @@ class TagImportOptions( HydrusSerialisable.SerialisableBase ):
     
     def GetContentUpdatePackage( self, status: int, media_result: ClientMediaResult.MediaResult, filterable_tags: collections.abc.Iterable[ str ], external_filterable_tags = None, external_additional_service_keys_to_tags = None ) -> ClientContentUpdates.ContentUpdatePackage:
         
+        passthrough_tags = filterable_tags
+        
         if external_filterable_tags is None:
             
             external_filterable_tags = set()
@@ -518,7 +522,7 @@ class TagImportOptions( HydrusSerialisable.SerialisableBase ):
                 
                 service_filterable_tags.update( external_filterable_tags )
                 
-                service_tags = service_tag_import_options.GetTags( service_key, status, media_result, service_filterable_tags, service_additional_tags )
+                service_tags = service_tag_import_options.GetTags( service_key, status, media_result, service_filterable_tags, service_additional_tags, passthrough_tags )
                 
             else:
                 
@@ -833,7 +837,7 @@ class ServiceTagImportOptions( HydrusSerialisable.SerialisableBase ):
         return statements
         
     
-    def GetTags( self, service_key: bytes, status: int, media_result: ClientMediaResult.MediaResult, filterable_tags: collections.abc.Collection[ str ], additional_tags: typing.Optional[ collections.abc.Collection[ str ] ] = None ):
+    def GetTags( self, service_key: bytes, status: int, media_result: ClientMediaResult.MediaResult, filterable_tags: collections.abc.Collection[ str ], additional_tags: typing.Optional[ collections.abc.Collection[ str ] ] = None, passthrough_tags = None ):
         
         if additional_tags is None:
             
@@ -848,7 +852,7 @@ class ServiceTagImportOptions( HydrusSerialisable.SerialisableBase ):
             
             if self._get_tags:
                 
-                filtered_tags = self._get_tags_filter.Filter( filterable_tags )
+                filtered_tags = self._get_tags_filter.Filter( filterable_tags, passthrough_tags=passthrough_tags )
                 
                 if not self._get_tags_overwrite_deleted:
                     
