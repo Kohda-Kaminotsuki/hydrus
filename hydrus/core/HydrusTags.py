@@ -1,6 +1,7 @@
 import collections
 import collections.abc
 import threading
+import re
 
 from hydrus.core import HydrusConstants as HC
 from hydrus.core import HydrusExceptions
@@ -378,7 +379,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
         self._UpdateRuleCache()
         
     
-    def _TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False ):
+    def _TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False, passthrough_tags = None ):
         
         # this is called a whole bunch and overhead piles up, so try to splay the logic out to hardcoded tests
         # we handle exceptions by testing tags before namespaces and namespaces before all namespaces
@@ -388,13 +389,50 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             if tag in self._tags_whitelist:
                 
                 return True
+
+            current_tag = tag
+            
+            testing_tagsets = []
+            for tagset in self._tags_blacklist:
                 
+                if tagset.startswith(f"{current_tag} {{unless}} "):
+                    
+                    testing_tagsets.append( re.split(r' \{unless\} | \{or\} ', tagset) )
+
+            if len( testing_tagsets ) == 0:
+                
+                if tag in self._tags_blacklist:
+
+                    return False 
+                
+            if passthrough_tags is None: 
+
+                return False
+
+            if len( testing_tagsets ) != 0 and passthrough_tags is not None: 
+                
+                for testing_tagset in testing_tagsets: 
+                    
+                    for testing_tag in testing_tagset: 
+                        
+                        if testing_tag == current_tag: 
+                            
+                            continue
+
+                        for passthrough_tag in passthrough_tags:
+                            
+                            if testing_tag == passthrough_tag:
+                                
+                                return True
+
+                return False
             
             if tag in self._tags_blacklist:
-                
+                  
                 return False
+                            
                 
-            
+                
             if apply_unnamespaced_rules_to_namespaced_tags:
                 
                 ( namespace, subtag ) = SplitTag( tag )
@@ -407,7 +445,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                         
                     
                     if subtag in self._tags_blacklist:
-                        
+
                         return False
                         
                     
@@ -438,7 +476,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                 
                 if namespace in self._namespaces_blacklist:
-                    
+
                     return False
                     
                 
@@ -448,7 +486,7 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
                     
                 
                 if self._all_namespaced_blacklisted:
-                    
+
                     return False
                     
                 
@@ -598,11 +636,11 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
         self._UpdateRuleCache()
         
     
-    def Filter( self, tags, apply_unnamespaced_rules_to_namespaced_tags = False ):
+    def Filter( self, tags, apply_unnamespaced_rules_to_namespaced_tags = False, passthrough_tags = None):
         
         with self._lock:
-            
-            return { tag for tag in tags if self._TagOK( tag, apply_unnamespaced_rules_to_namespaced_tags = apply_unnamespaced_rules_to_namespaced_tags ) }
+
+            return { tag for tag in tags if self._TagOK( tag, apply_unnamespaced_rules_to_namespaced_tags = apply_unnamespaced_rules_to_namespaced_tags, passthrough_tags = passthrough_tags ) }
             
         
     
@@ -718,11 +756,11 @@ class TagFilter( HydrusSerialisable.SerialisableBase ):
             
         
     
-    def TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False ):
+    def TagOK( self, tag, apply_unnamespaced_rules_to_namespaced_tags = False, passthrough_tags = None ):
         
         with self._lock:
             
-            return self._TagOK( tag, apply_unnamespaced_rules_to_namespaced_tags = apply_unnamespaced_rules_to_namespaced_tags )
+            return self._TagOK( tag, apply_unnamespaced_rules_to_namespaced_tags = apply_unnamespaced_rules_to_namespaced_tags, passthrough_tags = passthrough_tags )
             
         
     

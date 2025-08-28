@@ -3246,14 +3246,20 @@ class ReviewLocalFileImports( ClientGUIScrolledPanels.ReviewPanel ):
         self._pause_event.set()
         
     
-    def AddFolder( self ):
+    def AddFolder( self, recursively = True ):
         
         with QP.DirDialog( self, 'Select a folder to add.' ) as dlg:
             
             if dlg.exec() == QW.QDialog.DialogCode.Accepted:
                 
-                path = dlg.GetPath()
-                
+                if recursively == False:
+                    
+                    path = {'path': dlg.GetPath(), 'non_recursive_folder_search': True}
+                    
+                else:
+                    
+                    path = dlg.GetPath()
+                    
                 self._AddPathsToList( ( path, ) )
                 
             
